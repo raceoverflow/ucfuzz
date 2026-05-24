@@ -184,6 +184,7 @@ Things coming next, roughly in priority order:
 - [ ] **More evasion** - more evasion with random delay option in specified range
 - [ ] **CAPTCHA indicator** - indicate captcha by inclusion of specific markers to prevent it from wasting wordlist until solved
 - [ ] **Optimization** - add flags for disabling css and media loading
+- [ ] **Survive network errors** - keep going from the same place when stopped due to the network issues
 
 Have a feature request? [Open an issue](https://github.com/raceoverflow/ucfuzz/issues).
 
