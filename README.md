@@ -183,6 +183,7 @@ Things coming next, roughly in priority order:
 - [ ] **Web GUI** - modern minimalistic web GUI based on FastAPI
 - [ ] **More evasion** - more evasion with random delay option in specified range
 - [ ] **CAPTCHA indicator** - indicate captcha by inclusion of specific markers to prevent it from wasting wordlist until solved
+- [ ] **Optimization** - add flags for disabling css and media loading
 
 Have a feature request? [Open an issue](https://github.com/raceoverflow/ucfuzz/issues).
 
