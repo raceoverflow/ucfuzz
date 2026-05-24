@@ -185,6 +185,7 @@ Things coming next, roughly in priority order:
 - [ ] **CAPTCHA indicator** - indicate captcha by inclusion of specific markers to prevent it from wasting wordlist until solved
 - [ ] **Optimization** - add flags for disabling css and media loading
 - [ ] **Survive network errors** - keep going from the same place when stopped due to the network issues
+- [ ] **AuthFlow support** - make possible to record auth flow with seleniumbase recorder extension and use it to automate authentication
 
 Have a feature request? [Open an issue](https://github.com/raceoverflow/ucfuzz/issues).
 
