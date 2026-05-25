@@ -21,7 +21,7 @@ from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn, TimeEl
 
 from ucfuzz.core.engine import BrowserEngine
 from ucfuzz.core.fuzzer import Fuzzer
-from ucfuzz.exceptions import NavigationTimeoutError, UCFuzzError
+from ucfuzz.exceptions import UCFuzzError
 from ucfuzz.schemas.fuzzer import FuzzerOptions, ScanResult
 
 from ucfuzz.utils.logger import log, setup_logger
@@ -90,7 +90,7 @@ def main(
         None, "--extension",
         help="Append this extension to every wordlist entry, e.g. [cyan]php[/cyan].",
     ),
-    start: Optional[int] = typer.Option(
+    start: int = typer.Option(
         0,
         "--start",
         help="Index of word in wordlist to start fuzz from"
@@ -106,6 +106,10 @@ def main(
         raise typer.BadParameter(str(exc)) from exc
 
     total_rows = get_wordlist_rows_cnt(opts.wordlist)
+    if start >= total_rows:
+        raise typer.BadParameter(
+            "start parameter cannot be higher than wordlist length")
+
     console = Console(force_terminal=True)
 
     console.print(ui.build_banner(
@@ -124,7 +128,7 @@ def main(
         console.print(ui.browser_stage_panel())
         input("  → ")
 
-        fuzzer = Fuzzer(opts)
+        fuzzer = Fuzzer(opts, console=console)
         fuzzer.set_engine(browser)
 
         # -- Output + progress ------------------------------------------------
@@ -138,7 +142,8 @@ def main(
                 console=console,
             ) as progress:
                 setup_logger(progress.console)
-                task = progress.add_task("[cyan]Fuzzing…", total=total_rows)
+                task = progress.add_task(
+                    "[cyan]Fuzzing…", total=total_rows, completed=start)
 
                 try:
                     for result in fuzzer.run():
@@ -153,9 +158,6 @@ def main(
 
                         log.bind(result=result).info("")
                         writer.write(result)
-
-                except NavigationTimeoutError as exc:
-                    log.error(str(exc))
 
                 except UCFuzzError as exc:
                     log.error(f"Scan error: {exc}")
