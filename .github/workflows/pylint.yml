@@ -21,11 +21,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        # Устанавливаем сам пакет со всеми зависимостями
         pip install .
         pip install pylint
 
     - name: Analysing the code with pylint
       run: |
-        # Запускаем линтер только для твоей папки с кодом
         pylint ucfuzz
