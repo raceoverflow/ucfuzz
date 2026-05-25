@@ -105,22 +105,6 @@ ucfuzz -u https://target.com/FUZZ -w raft-large-dirs.txt --delay 50ms
 
 ---
 
-### File extension fuzzing
-
-Find hidden files with specific extensions. Combine with `--exclude-length` to filter out identical error pages.
-
-```bash
-ucfuzz -u https://target.com/FUZZ          \
-       -w raft-small-words.txt             \
-       --extension php                     \
-       --exclude-length 1234               \
-       -o results.jsonl
-```
-
-> 📽️ *[GIF: extension scan, filtering noise, clean hits]*
-
----
-
 ### Authenticated scanning
 
 UCFuzz keeps the full browser session alive. Log in through the browser window when it opens — cookies, tokens, and session state are all preserved for every subsequent request.
