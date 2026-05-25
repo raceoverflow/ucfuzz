@@ -93,30 +93,13 @@ Options:
 
 ## Use cases
 
-### Directory discovery
+### Discovery
 
-Standard directory brute-force on a site protected by Cloudflare. UCFuzz navigates through the challenge automatically.
+Standard brute-force on a site protected by Cloudflare. UCFuzz navigates through the challenge automatically.
 
 ```bash
 ucfuzz -u https://target.com/FUZZ -w raft-large-dirs.txt --delay 50ms
 ```
-
-> 📽️ *[GIF: directory scan running, hits showing in green/yellow]*
-
----
-
-### Authenticated scanning
-
-UCFuzz keeps the full browser session alive. Log in through the browser window when it opens — cookies, tokens, and session state are all preserved for every subsequent request.
-
-```bash
-ucfuzz -u https://app.target.com/api/FUZZ \
-       -w api-endpoints.txt               \
-       --delay 200ms
-```
-
-> 📽️ *[GIF: browser login step, then scan continuing with authenticated session]*
-
 ---
 
 ### Slow, human-like scanning
