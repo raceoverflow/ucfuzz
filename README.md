@@ -39,19 +39,20 @@ UCFuzz runs a **real Chrome browser** via `undetected-chromedriver`. Every reque
 | **Engine** | Raw HTTP (requests/aiohttp) | 🌐 **Full Chrome Browser** |
 | **WAF Evasion** | Blocked by Cloudflare / Akamai | ✅ **Naturally Bypasses** |
 | **JS Support** | None (Static only) | ⚡ **Full JS & SPA Handling** |
-| **Auth State** | Header-based (Manual) | 🔐 **Persistent Login Session** |
-| **Anti-Bot** | Fails on CAPTCHA | 🧩 **Human-in-the-loop Solve** |
 
 ---
 
-## Install
+## 📦 Installation
 
+Choose the method that fits your needs: 
+
+### 🐍 Via PyPI
+Install the stable version instantly:
 ```bash
 pip install ucfuzz
 ```
 
-Or from source:
-
+### 🛠️ Or from source:
 ```bash
 git clone https://github.com/raceoverflow/ucfuzz
 cd ucfuzz
