@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ucfuzz"
-version = "0.1.0"
+version = "0.1.2"
 description = "Browser-based web fuzzer with ffuf-like UX, powered by undetected-chromedriver"
 readme = "README.md"
 license = { text = "MIT" }

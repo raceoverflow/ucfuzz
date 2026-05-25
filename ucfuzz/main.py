@@ -90,11 +90,17 @@ def main(
         None, "--extension",
         help="Append this extension to every wordlist entry, e.g. [cyan]php[/cyan].",
     ),
+    start: Optional[int] = typer.Option(
+        0,
+        "--start",
+        help="Index of word in wordlist to start fuzz from"
+    )
 ) -> None:
     # -- Validate options via Pydantic ----------------------------------------
     try:
         opts = FuzzerOptions.model_validate(
-            dict(url=url, wordlist=wordlist, delay=delay, extension=ext)
+            dict(url=url, wordlist=wordlist, delay=delay,
+                 extension=ext, start_index=start)
         )
     except Exception as exc:
         raise typer.BadParameter(str(exc)) from exc

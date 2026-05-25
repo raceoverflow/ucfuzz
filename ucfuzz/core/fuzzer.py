@@ -100,7 +100,11 @@ class Fuzzer:
             raise WordlistError(f"Cannot read {opts.wordlist}: {exc}") from exc
 
         with wordlist_file:
+            word_index = 0
             for raw_word in wordlist_file:
+                if word_index < opts.start_index:
+                    word_index += 1
+                    continue
                 word = raw_word.strip()
                 if not word:
                     continue  # skip blank lines
