@@ -164,11 +164,6 @@ cat results.jsonl | jq 'select(.status_code == 200)'
 
 ---
 
-## Recommended wordlists
-
-UCFuzz works with any plain-text wordlist.
-
----
 
 ## Roadmap
 
@@ -195,11 +190,3 @@ Have a feature request? [Open an issue](https://github.com/raceoverflow/ucfuzz/i
 ## Legal
 
 UCFuzz is intended for **authorized security testing only**. Only use it against systems you own or have explicit written permission to test. Unauthorized use is illegal and unethical.
-
----
-
-<div align="center">
-
-MIT License — © 2026 raceoverflow
-
-</div>
