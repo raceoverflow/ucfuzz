@@ -86,6 +86,7 @@ Options:
   --exclude-length INTEGER    Hide this content length (repeatable)
   --extension TEXT            Append extension to every word: php, html, js
   --headless                  Run browser without a window
+  --start                     Specify index of word in wordlist to start scan from
   --help                      Show this message and exit
 ```
 
