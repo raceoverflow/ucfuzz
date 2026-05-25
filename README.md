@@ -28,21 +28,19 @@
 
 ---
 
-## Why UCFuzz?
+## 🚀 Why UCFuzz?
 
 Most fuzzers send raw HTTP requests. That works — until the target runs Cloudflare, has browser fingerprinting, requires a login session, or throws a CAPTCHA on suspicious traffic.
 
-UCFuzz runs a **real Chrome browser** via undetected-chromedriver. Every request has a real TLS fingerprint, real browser headers, real JavaScript execution. To the server, it looks like a human clicking links.
+UCFuzz runs a **real Chrome browser** via `undetected-chromedriver`. Every request has a real TLS fingerprint, real browser headers, and real JavaScript execution. To the server, it looks like a human clicking links.
 
-```
-Traditional fuzzer          UCFuzz
-─────────────────           ──────────────────────────────
-raw HTTP request   vs.      full Chrome browser session
-blocked by WAF              bypasses Cloudflare, Akamai
-no JS execution             executes JS, handles SPAs
-no cookie session           keeps your login session
-fails on CAPTCHA            pauses for you to solve it
-```
+| Feature | Traditional Fuzzer | **UCFuzz** |
+| :--- | :--- | :--- |
+| **Engine** | Raw HTTP (requests/aiohttp) | 🌐 **Full Chrome Browser** |
+| **WAF Evasion** | Blocked by Cloudflare / Akamai | ✅ **Naturally Bypasses** |
+| **JS Support** | None (Static only) | ⚡ **Full JS & SPA Handling** |
+| **Auth State** | Header-based (Manual) | 🔐 **Persistent Login Session** |
+| **Anti-Bot** | Fails on CAPTCHA | 🧩 **Human-in-the-loop Solve** |
 
 ---
 
