@@ -3,13 +3,9 @@ Pydantic models for UCFuzz configuration and scan results.
 """
 
 from __future__ import annotations
-
-from pathlib import Path
 from typing import Optional
-
 from pydantic import BaseModel, FilePath, HttpUrl, field_validator, model_validator
-
-from ucfuzz.schemas.types import Duration
+from ucfuzz.schemas.types import Duration, parse_range_delay
 
 
 class FuzzerOptions(BaseModel):
@@ -33,6 +29,7 @@ class FuzzerOptions(BaseModel):
     url: str  # stored as str after validation so FUZZ replacement is safe
     wordlist: FilePath
     delay: Duration = 0.05
+    range_delay: Optional[str] = None
     extension: Optional[str] = None
     start_index: int = 0
     headers: dict[str, str] = {}
@@ -51,6 +48,15 @@ class FuzzerOptions(BaseModel):
         # a temporary parse so we get a helpful error message.
         HttpUrl(raw)  # raises ValidationError if invalid
         return raw
+
+    @field_validator("range_delay", mode="before")
+    @classmethod
+    def _validate_range_delay(cls, v: object) -> Optional[str]:
+        if v is None:
+            return None
+        # dry-run to trigger ValueError if malformed
+        parse_range_delay(str(v))
+        return str(v)              # store raw string
 
     @model_validator(mode="after")
     def _require_fuzz_marker(self) -> FuzzerOptions:

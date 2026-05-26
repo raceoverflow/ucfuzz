@@ -80,6 +80,7 @@ Options:
   -u, --url TEXT              Target URL with FUZZ placeholder  [required]
   -w, --wordlist PATH         Path to wordlist  [required]
   -o, --output PATH           Save results as JSONL
+  --range-delay TEXT          Randomly choose delay in provided range for example: 50ms-2s
   --delay TEXT                Delay between requests: 100ms, 1s, 2m  [default: 0s]
   --timeout FLOAT             Response timeout in seconds  [default: 10.0]
   --exclude-status INTEGER    Hide this status code (repeatable)  [default: 404]
@@ -148,10 +149,9 @@ Things coming next, roughly in priority order:
 - [ ] **Smarter response handling** - parse robots.txt, sitemap, ds_store and opendir responses
 - [ ] **Save the state** - save the state of scans in sqlite database
 - [ ] **Web GUI** - modern minimalistic web GUI based on FastAPI
-- [ ] **Random delay** - random delay to prevent waf from detecting us in some cases
+- [x] **Random delay** - random delay to prevent waf from detecting us in some cases
 - [x] **CAPTCHA flag** - indicate captcha by inclusion of specific markers to prevent it from wasting wordlist until solved
 - [x] **Survive network errors** - keep going from the same place when stopped due to the network issues
-- [ ] **Proxy mode** - proxify http requests of any app over the browser
 
 Have a feature request? [Open an issue](https://github.com/raceoverflow/ucfuzz/issues).
 

@@ -8,6 +8,7 @@ Custom Pydantic-compatible annotated types.
 """
 
 import re
+import random
 from typing import Annotated
 
 from pydantic import BeforeValidator
@@ -44,3 +45,42 @@ def _parse_delay(value: str | float | int) -> float:
 
 #: Annotated float (seconds) that accepts human-readable duration strings.
 Duration = Annotated[float, BeforeValidator(_parse_delay)]
+
+
+def _parse_range_delay(value: str | float | int) -> float:
+    """Coerce *value* to a random float number of seconds within a range.
+
+    Accepts either a plain number/duration (delegated to ``_parse_delay``) or a
+    range expression such as ``200ms-2s``, ``0.5s-1.5s``, or ``1m-2m``.
+    """
+    if isinstance(value, (int, float)):
+        return float(value)
+
+    # Split on the *last* hyphen that is preceded by a unit character so that
+    # negative numbers (not really valid here, but defensive) don't confuse us.
+    range_match = re.match(
+        r"^\s*"
+        r"(\d+(?:\.\d+)?\s*(?:ms|s|m|h))"  # lower bound
+        r"\s*-\s*"                            # separator
+        r"(\d+(?:\.\d+)?\s*(?:ms|s|m|h))"  # upper bound
+        r"\s*$",
+        value,
+        re.IGNORECASE,
+    )
+
+    if not range_match:
+        # Fall back to a plain duration (e.g. "1s" passed to a RangeDuration field)
+        return _parse_delay(value)
+
+    low = _parse_delay(range_match.group(1).strip())
+    high = _parse_delay(range_match.group(2).strip())
+
+    if low > high:
+        low, high = high, low
+
+    return random.uniform(low, high)
+
+
+def parse_range_delay(value: str) -> float:
+    """Public wrapper — call this each iteration to get a fresh random value."""
+    return _parse_range_delay(value)

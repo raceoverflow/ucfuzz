@@ -21,6 +21,7 @@ import time
 from collections.abc import Iterator
 from typing import Optional, Protocol, runtime_checkable
 
+from ucfuzz.schemas.types import parse_range_delay
 from ucfuzz.exceptions import BrowserNotReadyError, NavigationTimeoutError, NetworkUnreachableError, CaptchaNotSolvedError
 from ucfuzz.schemas.fuzzer import FuzzerOptions, ScanResult
 from ucfuzz.utils.logger import log
@@ -151,5 +152,10 @@ class Fuzzer:
                     continue
                 yield result
 
-                if opts.delay:
+                range_delay = opts.range_delay
+                if range_delay:
+                    # fresh random each time
+                    random_delay = parse_range_delay(range_delay)
+                    time.sleep(random_delay)
+                elif opts.delay:
                     time.sleep(opts.delay)

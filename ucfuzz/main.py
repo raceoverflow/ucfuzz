@@ -92,6 +92,12 @@ def main(
         "5ms", "--delay",
         help="Pause between requests, e.g. [cyan]100ms[/cyan], [cyan]1s[/cyan], [cyan]2m[/cyan].",
     ),
+    range_delay: Optional[str] = typer.Option(
+        None, "--range-delay",
+        help="Delay range between requests, e.g. '200ms-2s', '0.5s-1.5s', '1m-2m'. "
+        "A random value is picked within the range on each request. "
+        "Accepts units: ms, s, m, h. Overrides --delay when set."
+    ),
     timeout: float = typer.Option(
         10.0, "--timeout",
         help="Seconds to wait for a response before raising a timeout.",
@@ -137,6 +143,7 @@ def main(
             dict(url=url,
                  wordlist=wordlist,
                  delay=delay,
+                 range_delay=range_delay,
                  extension=ext,
                  start_index=start,
                  headers=_parse_headers(
