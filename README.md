@@ -87,6 +87,7 @@ Options:
   --extension TEXT            Append extension to every word: php, html, js
   --headless                  Run browser without a window
   --start                     Specify index of word in wordlist to start scan from
+  --captcha-flag              Specify word whic appears on the page when captcha is triggered to solve it automatically
   --help                      Show this message and exit
 ```
 
@@ -145,11 +146,11 @@ Things coming next, roughly in priority order:
 - [ ] **Smarter response handling** - parse robots.txt, sitemap, ds_store and opendir responses
 - [ ] **Save the state** - save the state of scans in sqlite database
 - [ ] **Web GUI** - modern minimalistic web GUI based on FastAPI
-- [ ] **More evasion** - more evasion with random delay option in specified range
-- [ ] **CAPTCHA indicator** - indicate captcha by inclusion of specific markers to prevent it from wasting wordlist until solved
+- [ ] **More evasion** - more evasion with random delay option using specified time range
+- [x] **CAPTCHA flag** - indicate captcha by inclusion of specific markers to prevent it from wasting wordlist until solved
 - [ ] **Optimization** - add flags for disabling css and media loading
-- [ ] **Survive network errors** - keep going from the same place when stopped due to the network issues
-- [ ] **AuthFlow support** - make possible to record auth flow with seleniumbase recorder extension and use it to automate authentication
+- [x] **Survive network errors** - keep going from the same place when stopped due to the network issues
+- [ ] **Proxy mode** - proxify http requests of any app over the browser
 
 Have a feature request? [Open an issue](https://github.com/raceoverflow/ucfuzz/issues).
 
