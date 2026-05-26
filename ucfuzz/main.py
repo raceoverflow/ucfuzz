@@ -128,7 +128,7 @@ def main(
         console.print(ui.browser_stage_panel())
         input("  → ")
 
-        fuzzer = Fuzzer(opts, console=console)
+        fuzzer = Fuzzer(opts)
         fuzzer.set_engine(browser)
 
         # -- Output + progress ------------------------------------------------
@@ -158,11 +158,9 @@ def main(
 
                         log.bind(result=result).info("")
                         writer.write(result)
-
                 except UCFuzzError as exc:
                     log.error(f"Scan error: {exc}")
                     raise typer.Exit(code=1) from exc
-
                 except KeyboardInterrupt:
                     log.warning("Interrupted by user.")
 

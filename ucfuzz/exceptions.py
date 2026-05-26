@@ -23,5 +23,12 @@ class NavigationTimeoutError(UCFuzzError):
         super().__init__(f"No response for {url!r} within {timeout}s")
 
 
+class NetworkUnreachableError(UCFuzzError):
+    """Raised when network is unreachable"""
+
+    def __init__(self) -> None:
+        super().__init__(f"Network unreachable")
+
+
 class WordlistError(UCFuzzError):
     """Raised for problems reading or parsing the wordlist."""

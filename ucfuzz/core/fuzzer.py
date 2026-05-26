@@ -21,10 +21,9 @@ import time
 from collections.abc import Iterator
 from typing import Optional, Protocol, runtime_checkable
 
-from ucfuzz.exceptions import BrowserNotReadyError, NavigationTimeoutError
+from ucfuzz.exceptions import BrowserNotReadyError, NavigationTimeoutError, NetworkUnreachableError
 from ucfuzz.schemas.fuzzer import FuzzerOptions, ScanResult
 from ucfuzz.utils.logger import log
-from rich.console import Console
 
 
 # ---------------------------------------------------------------------------
@@ -62,10 +61,9 @@ class Fuzzer:
             print(result)
     """
 
-    def __init__(self, options: FuzzerOptions, console: Console) -> None:
+    def __init__(self, options: FuzzerOptions) -> None:
         self._options = options
         self._engine: Optional[NavigationEngine] = None
-        self._console = console
 
     def set_engine(self, engine: NavigationEngine) -> None:
         """Attach a navigation engine (typically a :class:`~core.engine.BrowserEngine`).
@@ -115,7 +113,13 @@ class Fuzzer:
                 try:
                     result = self._engine.navigate(url)
                 except NavigationTimeoutError as ex:
-                    self._console.print(ex)
+                    log.error(ex)
+                    continue
+                except NetworkUnreachableError as ex:
+                    log.error(ex)
+                    log.warning(
+                        "Press ENTER when network is reachable again...")
+                    input("  → ")
                     continue
                 yield result
 

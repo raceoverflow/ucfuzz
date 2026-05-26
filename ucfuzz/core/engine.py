@@ -37,7 +37,7 @@ from typing import Any, Optional
 
 import mycdp
 
-from ucfuzz.exceptions import NavigationTimeoutError
+from ucfuzz.exceptions import NavigationTimeoutError, NetworkUnreachableError
 from ucfuzz.schemas.fuzzer import ScanResult
 from ucfuzz.utils.logger import log
 
@@ -263,6 +263,9 @@ class BrowserEngine:
         ------
         NavigationTimeoutError
             If no CDP response is received within ``response_timeout`` seconds.
+
+        NetworkUnreachableError
+            If received ResponseRecord url starting with 'data:image' which indicated network error
         """
         # arm() MUST be called before cdp.open() — it snapshots the generation
         # counter so that responses arriving *during* open() are not missed.
@@ -288,6 +291,9 @@ class BrowserEngine:
         # Fall back to rendered page-source length when header is absent
         content_length = record.content_length or len(
             self._sb.cdp.get_page_source())
+
+        if record.url.startswith("data:image"):
+            raise NetworkUnreachableError
 
         return ScanResult(
             url=url,
