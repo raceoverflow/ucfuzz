@@ -272,6 +272,8 @@ class BrowserEngine:
         generation = self._tracker.arm()
 
         try:
+            if '#' in url:
+                self._sb.cdp.open("about:blank")
             self._sb.cdp.open(url)
         except Exception as exc:
             log.error(f"Navigation error for {url!r}: {exc}")
