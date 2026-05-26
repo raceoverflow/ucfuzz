@@ -37,7 +37,7 @@ from typing import Any, Optional
 
 import mycdp
 
-from ucfuzz.exceptions import NavigationTimeoutError, NetworkUnreachableError
+from ucfuzz.exceptions import NavigationTimeoutError, NetworkUnreachableError, CaptchaNotSolvedError
 from ucfuzz.schemas.fuzzer import ScanResult
 from ucfuzz.utils.logger import log
 
@@ -188,13 +188,14 @@ class BrowserEngine:
         require ``headless=False``.
     """
 
-    def __init__(self, response_timeout: float = 10.0, headless: bool = False) -> None:
+    def __init__(self, response_timeout: float = 10.0, headless: bool = False, captcha_flag: Optional[str] = None) -> None:
         self._timeout = response_timeout
         self._headless = headless
 
         self._sb: Any = None          # SeleniumBase driver
         self._sb_ctx: Any = None      # SeleniumBase context manager
         self._tracker = _ResponseTracker()
+        self._captcha_flag = captcha_flag
 
     # ------------------------------------------------------------------
     # Context-manager protocol
@@ -232,18 +233,11 @@ class BrowserEngine:
         """
         try:
             self._sb.cdp.open(url)
-            time.sleep(2)
         except Exception as exc:
             log.error(f"Failed to open {url!r}: {exc}")
             raise
 
-        try:
-            self._sb.cdp.solve_captcha()
-        except Exception as exc:
-            log.warning(
-                f"Automated CAPTCHA solve failed (you can solve it manually): {exc}")
-
-        time.sleep(2)
+        self._solve_captcha()
 
     def navigate(self, url: str) -> ScanResult:
         """Navigate to *url* and return the observed HTTP response.
@@ -289,8 +283,12 @@ class BrowserEngine:
             return ScanResult(url=url, status_code=0, content_length=0)
 
         # Fall back to rendered page-source length when header is absent
-        content_length = record.content_length or len(
-            self._sb.cdp.get_page_source())
+        page_source = self._sb.cdp.get_page_source()
+        if self._captcha_flag in page_source:
+            if not self._solve_captcha():
+                raise CaptchaNotSolvedError
+
+        content_length = record.content_length or len(page_source)
 
         if record.url.startswith("data:image"):
             raise NetworkUnreachableError
@@ -314,3 +312,17 @@ class BrowserEngine:
         finally:
             self._sb = None
             self._sb_ctx = None
+
+    def _solve_captcha(self) -> bool:
+        time.sleep(2)
+        try:
+            self._sb.cdp.solve_captcha()
+            time.sleep(2)
+            if self._captcha_flag:
+                page_source = self._sb.cdp.get_page_source()
+                assert self._captcha_flag not in page_source, ""
+        except Exception as exc:
+            log.warning(
+                f"Automated CAPTCHA solve failed (you can solve it manually): {exc}")
+            return False
+        return True

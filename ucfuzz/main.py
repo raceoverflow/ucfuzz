@@ -94,6 +94,11 @@ def main(
         0,
         "--start",
         help="Index of word in wordlist to start fuzz from"
+    ),
+    captcha_flag: Optional[str] = typer.Option(
+        None,
+        "--captcha-flag",
+        help="String which helps to indicate the WAF CAPTCHA page"
     )
 ) -> None:
     # -- Validate options via Pydantic ----------------------------------------
@@ -123,7 +128,7 @@ def main(
     ))
 
     # -- Browser stage --------------------------------------------------------
-    with BrowserEngine(response_timeout=timeout, headless=headless) as browser:
+    with BrowserEngine(response_timeout=timeout, headless=headless, captcha_flag=captcha_flag) as browser:
         browser.start(opts.url)
         console.print(ui.browser_stage_panel())
         input("  → ")

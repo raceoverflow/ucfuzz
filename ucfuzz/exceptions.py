@@ -27,7 +27,14 @@ class NetworkUnreachableError(UCFuzzError):
     """Raised when network is unreachable"""
 
     def __init__(self) -> None:
-        super().__init__(f"Network unreachable")
+        super().__init__(f"Network unreachable.")
+
+
+class CaptchaNotSolvedError(UCFuzzError):
+    """Raised when CAPTCHA solving is necesary to keep fuzzing"""
+
+    def __init__(self) -> None:
+        super().__init__(f"Cant solve CAPTCHA automatically to keep fuzzing.")
 
 
 class WordlistError(UCFuzzError):

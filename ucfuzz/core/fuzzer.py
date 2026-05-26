@@ -21,7 +21,7 @@ import time
 from collections.abc import Iterator
 from typing import Optional, Protocol, runtime_checkable
 
-from ucfuzz.exceptions import BrowserNotReadyError, NavigationTimeoutError, NetworkUnreachableError
+from ucfuzz.exceptions import BrowserNotReadyError, NavigationTimeoutError, NetworkUnreachableError, CaptchaNotSolvedError
 from ucfuzz.schemas.fuzzer import FuzzerOptions, ScanResult
 from ucfuzz.utils.logger import log
 
@@ -113,6 +113,12 @@ class Fuzzer:
                 url = opts.build_url(word)
                 try:
                     result = self._engine.navigate(url)
+                except CaptchaNotSolvedError as ex:
+                    log.error(ex)
+                    log.warning(
+                        "Press ENTER when you solved CAPTCHA manually...")
+                    input("  → ")
+                    continue
                 except NavigationTimeoutError as ex:
                     log.error(ex)
                     continue
