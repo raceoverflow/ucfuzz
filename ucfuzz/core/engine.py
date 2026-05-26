@@ -103,14 +103,14 @@ class _ResponseTracker:
 
         Call this *before* ``cdp.open()`` so the handler tags any response
         that arrives during open() with the correct generation.
+
+        All previously accumulated records are dropped — each navigation
+        starts from a clean slate so stale error-page responses from a
+        previous network failure cannot bleed into the next wait().
         """
         with self._condition:
-            cutoff = self._generation
             self._generation += 1
-            # Keep only the previous generation's records in case best_match()
-            # is called just after arm() — drop everything older.
-            self._records = [(generation, record) for generation,
-                             record in self._records if generation >= cutoff]
+            self._records.clear()
             return self._generation
 
     def wait(self, generation: int, timeout: float) -> bool:
@@ -270,7 +270,6 @@ class BrowserEngine:
         # arm() MUST be called before cdp.open() — it snapshots the generation
         # counter so that responses arriving *during* open() are not missed.
         generation = self._tracker.arm()
-
         try:
             if '#' in url:
                 self._sb.cdp.open("about:blank")
@@ -285,7 +284,6 @@ class BrowserEngine:
 
         records = self._tracker.records_for(generation)
         record = self._tracker.best_match(records, url)
-
         if record is None:
             log.warning(f"No response record found for {url!r}")
             return ScanResult(url=url, status_code=0, content_length=0)

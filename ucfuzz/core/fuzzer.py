@@ -43,6 +43,7 @@ class NavigationEngine(Protocol):
 # Fuzzer
 # ---------------------------------------------------------------------------
 
+
 class Fuzzer:
     """Iterate over a wordlist and yield one :class:`ScanResult` per word.
 
