@@ -52,6 +52,28 @@ def _should_skip(
     return False
 
 
+def _parse_headers(raw: Optional[list[str]]) -> dict[str, str]:
+    result = {}
+    for item in (raw or []):
+        if ":" not in item:
+            raise typer.BadParameter(
+                f"Invalid header {item!r}, expected 'Name: Value'")
+        name, _, value = item.partition(":")
+        result[name.strip()] = value.strip()
+    return result
+
+
+def _parse_cookies(raw: Optional[list[str]]) -> dict[str, str]:
+    result = {}
+    for item in (raw or []):
+        if "=" not in item:
+            raise typer.BadParameter(
+                f"Invalid cookie {item!r}, expected 'name=value'")
+        name, _, value = item.partition("=")
+        result[name.strip()] = value.strip()
+    return result
+
+
 @app.command()
 def main(
     url: str = typer.Option(
@@ -99,13 +121,27 @@ def main(
         None,
         "--captcha-flag",
         help="String which helps to indicate the WAF CAPTCHA page"
-    )
+    ),
+    headers: Optional[list[str]] = typer.Option(
+        None, "--header", "-H",
+        help="Extra header in 'Name: Value' format (repeatable).",
+    ),
+    cookies: Optional[list[str]] = typer.Option(
+        None, "--cookie", "-b",
+        help="Cookie in 'name=value' format (repeatable).",
+    ),
 ) -> None:
     # -- Validate options via Pydantic ----------------------------------------
     try:
         opts = FuzzerOptions.model_validate(
-            dict(url=url, wordlist=wordlist, delay=delay,
-                 extension=ext, start_index=start)
+            dict(url=url,
+                 wordlist=wordlist,
+                 delay=delay,
+                 extension=ext,
+                 start_index=start,
+                 headers=_parse_headers(
+                     headers),
+                 cookies=_parse_cookies(cookies),)
         )
     except Exception as exc:
         raise typer.BadParameter(str(exc)) from exc
@@ -128,7 +164,11 @@ def main(
     ))
 
     # -- Browser stage --------------------------------------------------------
-    with BrowserEngine(response_timeout=timeout, headless=headless, captcha_flag=captcha_flag) as browser:
+    with BrowserEngine(response_timeout=timeout,
+                       headless=headless,
+                       captcha_flag=captcha_flag,
+                       extra_headers=opts.headers,
+                       extra_cookies=opts.cookies) as browser:
         browser.start(opts.url)
         console.print(ui.browser_stage_panel())
         input("  → ")

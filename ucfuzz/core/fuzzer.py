@@ -37,7 +37,7 @@ BLACKLIST = [
 ]
 
 
-def word_is_blacklisted(word: str) -> bool:
+def word_in_blacklist(word: str) -> bool:
     for blacklist_word in BLACKLIST:
         if blacklist_word in word:
             return True
@@ -125,7 +125,7 @@ class Fuzzer:
                     continue
                 word = raw_word.strip()
 
-                if word_is_blacklisted(word):
+                if word_in_blacklist(word):
                     continue
 
                 if not word:

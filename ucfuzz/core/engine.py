@@ -188,7 +188,11 @@ class BrowserEngine:
         require ``headless=False``.
     """
 
-    def __init__(self, response_timeout: float = 10.0, headless: bool = False, captcha_flag: Optional[str] = None) -> None:
+    def __init__(self, response_timeout: float = 10.0,
+                 headless: bool = False,
+                 captcha_flag: Optional[str] = None,
+                 extra_headers: Optional[dict[str, str]] = None,
+                 extra_cookies: Optional[dict[str, str]] = None) -> None:
         self._timeout = response_timeout
         self._headless = headless
 
@@ -196,6 +200,9 @@ class BrowserEngine:
         self._sb_ctx: Any = None      # SeleniumBase context manager
         self._tracker = _ResponseTracker()
         self._captcha_flag = captcha_flag
+
+        self._extra_headers = extra_headers or {}
+        self._extra_cookies = extra_cookies or {}
 
     # ------------------------------------------------------------------
     # Context-manager protocol
@@ -238,6 +245,9 @@ class BrowserEngine:
             raise
 
         self._solve_captcha()
+
+        self._apply_headers()
+        self._apply_cookies()
 
     def navigate(self, url: str) -> ScanResult:
         """Navigate to *url* and return the observed HTTP response.
@@ -326,3 +336,26 @@ class BrowserEngine:
                 f"Automated CAPTCHA solve failed (you can solve it manually): {exc}")
             return False
         return True
+
+    def _apply_headers(self) -> None:
+        if not self._extra_headers:
+            return
+        try:
+            self._sb.driver.execute_cdp_cmd("Network.enable", {})
+            self._sb.driver.execute_cdp_cmd(
+                "Network.setExtraHTTPHeaders",
+                {"headers": self._extra_headers},
+            )
+            log.info(f"Applied {len(self._extra_headers)} custom header(s).")
+        except Exception as exc:
+            log.error(f"Failed to set extra headers: {exc}")
+
+    def _apply_cookies(self) -> None:
+        if not self._extra_cookies:
+            return
+        try:
+            for name, value in self._extra_cookies.items():
+                self._sb.add_cookie({"name": name, "value": value})
+            log.info(f"Merged {len(self._extra_cookies)} custom cookie(s).")
+        except Exception as exc:
+            log.error(f"Failed to set cookies: {exc}")

@@ -35,6 +35,8 @@ class FuzzerOptions(BaseModel):
     delay: Duration = 0.05
     extension: Optional[str] = None
     start_index: int = 0
+    headers: dict[str, str] = {}
+    cookies: dict[str, str] = {}
 
     # ------------------------------------------------------------------
     # Validators
