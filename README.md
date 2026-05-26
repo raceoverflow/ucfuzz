@@ -87,7 +87,9 @@ Options:
   --extension TEXT            Append extension to every word: php, html, js
   --headless                  Run browser without a window
   --start                     Specify index of word in wordlist to start scan from
-  --captcha-flag              Specify word whic appears on the page when captcha is triggered to solve it automatically
+  --captcha-flag              Specify word which appears on the page when captcha is triggered to solve it automatically
+  --headers                   Specify custom headers
+  --cookies                   Specify custom cookies
   --help                      Show this message and exit
 ```
 
@@ -140,7 +142,7 @@ Things coming next, roughly in priority order:
 
 - [ ] **Parallel browser sessions** — run N browsers simultaneously for faster scans without looking like a bot
 - [ ] **Recursive mode** — automatically fuzz newly discovered directories with specified recursion depth
-- [ ] **Custom headers & cookies** — inject `Authorization`, `X-API-Key`, or any arbitrary header per request
+- [x] **Custom headers & cookies** — inject `Authorization`, `X-API-Key`, or any arbitrary header per request
 - [ ] **POST / PUT fuzzing** — fuzz request bodies, not just URLs
 - [ ] **Report export** — generate HTML/Markdown reports from JSONL output
 - [ ] **Smarter response handling** - parse robots.txt, sitemap, ds_store and opendir responses
