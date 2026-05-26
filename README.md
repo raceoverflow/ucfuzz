@@ -146,9 +146,8 @@ Things coming next, roughly in priority order:
 - [ ] **Smarter response handling** - parse robots.txt, sitemap, ds_store and opendir responses
 - [ ] **Save the state** - save the state of scans in sqlite database
 - [ ] **Web GUI** - modern minimalistic web GUI based on FastAPI
-- [ ] **More evasion** - more evasion with random delay option using specified time range
+- [ ] **Random delay** - random delay to prevent waf from detecting us in some cases
 - [x] **CAPTCHA flag** - indicate captcha by inclusion of specific markers to prevent it from wasting wordlist until solved
-- [ ] **Optimization** - add flags for disabling css and media loading
 - [x] **Survive network errors** - keep going from the same place when stopped due to the network issues
 - [ ] **Proxy mode** - proxify http requests of any app over the browser
 

@@ -25,10 +25,21 @@ from ucfuzz.exceptions import BrowserNotReadyError, NavigationTimeoutError, Netw
 from ucfuzz.schemas.fuzzer import FuzzerOptions, ScanResult
 from ucfuzz.utils.logger import log
 
+BLACKLIST = [
+    "logout",
+    "log-out",
+    "signout",
+    "sign-out",
+    "exit",
+    "quit",
+    "endsession",
+    "revoke",
+]
 
 # ---------------------------------------------------------------------------
 # Engine protocol — lets us inject a stub in tests without importing Selenium
 # ---------------------------------------------------------------------------
+
 
 @runtime_checkable
 class NavigationEngine(Protocol):
@@ -41,8 +52,7 @@ class NavigationEngine(Protocol):
 
 # ---------------------------------------------------------------------------
 # Fuzzer
-# ---------------------------------------------------------------------------
-
+# ---------------------------------------------------------------------------s
 
 class Fuzzer:
     """Iterate over a wordlist and yield one :class:`ScanResult` per word.
@@ -107,6 +117,11 @@ class Fuzzer:
                     word_index += 1
                     continue
                 word = raw_word.strip()
+
+                for blacklist_word in BLACKLIST:
+                    if blacklist_word in word:
+                        continue
+
                 if not word:
                     continue  # skip blank lines
 
