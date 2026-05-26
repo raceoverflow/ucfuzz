@@ -141,17 +141,15 @@ cat results.jsonl | jq 'select(.status_code == 200)'
 
 Things coming next, roughly in priority order:
 
-- [ ] **Parallel browser sessions** — run N browsers simultaneously for faster scans without looking like a bot
-- [ ] **Recursive mode** — automatically fuzz newly discovered directories with specified recursion depth
 - [x] **Custom headers & cookies** — inject `Authorization`, `X-API-Key`, or any arbitrary header per request
-- [ ] **POST / PUT fuzzing** — fuzz request bodies, not just URLs
-- [ ] **Report export** — generate HTML/Markdown reports from JSONL output
-- [ ] **Smarter response handling** - parse robots.txt, sitemap, ds_store and opendir responses
-- [ ] **Save the state** - save the state of scans in sqlite database
-- [ ] **Web GUI** - modern minimalistic web GUI based on FastAPI
 - [x] **Random delay** - random delay to prevent waf from detecting us in some cases
 - [x] **CAPTCHA flag** - indicate captcha by inclusion of specific markers to prevent it from wasting wordlist until solved
 - [x] **Survive network errors** - keep going from the same place when stopped due to the network issues
+- [ ] **Parallel sessions** — run N sessions simultaneously for faster scans without looking like a bot
+- [ ] **Recursive mode** — automatically fuzz newly discovered directories with specified recursion depth
+- [ ] **Smarter response handling** - parse robots.txt, sitemap, ds_store and opendir responses
+- [ ] **POST / PUT fuzzing** — fuzz request bodies, not just URLs
+- [ ] **Web GUI** - modern minimalistic web GUI based on FastAPI
 
 Have a feature request? [Open an issue](https://github.com/raceoverflow/ucfuzz/issues).
 
