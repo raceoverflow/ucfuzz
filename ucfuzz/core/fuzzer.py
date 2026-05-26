@@ -36,10 +36,17 @@ BLACKLIST = [
     "revoke",
 ]
 
+
+def word_is_blacklisted(word: str) -> bool:
+    for blacklist_word in BLACKLIST:
+        if blacklist_word in word:
+            return True
+    return False
+
+
 # ---------------------------------------------------------------------------
 # Engine protocol — lets us inject a stub in tests without importing Selenium
 # ---------------------------------------------------------------------------
-
 
 @runtime_checkable
 class NavigationEngine(Protocol):
@@ -118,9 +125,8 @@ class Fuzzer:
                     continue
                 word = raw_word.strip()
 
-                for blacklist_word in BLACKLIST:
-                    if blacklist_word in word:
-                        continue
+                if word_is_blacklisted(word):
+                    continue
 
                 if not word:
                     continue  # skip blank lines
