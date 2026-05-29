@@ -294,7 +294,7 @@ class BrowserEngine:
 
         # Fall back to rendered page-source length when header is absent
         page_source = self._sb.cdp.get_page_source()
-        if self._captcha_flag in page_source:
+        if self._captcha_flag is not None and self._captcha_flag in page_source:
             if not self._solve_captcha():
                 raise CaptchaNotSolvedError
 
@@ -328,7 +328,7 @@ class BrowserEngine:
         try:
             self._sb.cdp.solve_captcha()
             time.sleep(2)
-            if self._captcha_flag:
+            if self._captcha_flag is not None:
                 page_source = self._sb.cdp.get_page_source()
                 assert self._captcha_flag not in page_source, ""
         except Exception as exc:
