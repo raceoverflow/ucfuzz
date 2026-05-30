@@ -73,6 +73,8 @@ The browser opens. Log in, solve any CAPTCHA, then press **Enter** — UCFuzz ta
 
 ## Usage
 
+https://github.com/user-attachments/assets/11e8e477-a8d8-4fc0-8756-05a5c806da11
+
 ```
 ucfuzz [OPTIONS]
 
